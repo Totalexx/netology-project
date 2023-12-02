@@ -26,7 +26,8 @@ public class StatementService {
     }
 
     public List<Operation> getOperations(int customerId) {
-        return storage.get(customerId);
+        List<Operation> operations = storage.get(customerId);
+        return operations == null ? new ArrayList<>() : operations;
     }
 
     public String getOperations() {

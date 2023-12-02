@@ -1,5 +1,8 @@
 package ru.netology.vitaliy.service;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.netology.vitaliy.OperationHistoryApiApplicationTest;
@@ -28,7 +31,7 @@ public class OperationControllerTest extends OperationHistoryApiApplicationTest 
         Thread.sleep(properties.getTimeout());
 
         List<OperationDto> operations = operationController.getOperations(1);
-        OperationDto dto1 = operations.get(0);
+        OperationDto dto1 = operations.stream().filter(o -> o.getId() == 1).findFirst().get();
 
         assertEquals(dto1.getId(),dto.getId());
         assertEquals(dto1.getCustomerId(),dto.getCustomerId());
@@ -39,10 +42,10 @@ public class OperationControllerTest extends OperationHistoryApiApplicationTest 
 
     @Test
     void getOperationsTest() throws InterruptedException {
-        OperationDto operation1 = new OperationDto(1,1,100,"RUB","Steam");
+        OperationDto operation1 = new OperationDto(2,1,100,"RUB","Steam");
         operationController.addOperation(operation1);
         Thread.sleep(properties.getTimeout());
-        OperationDto operation2 = new OperationDto(2,1,100,"RUB","Steam");
+        OperationDto operation2 = new OperationDto(3,1,100,"RUB","Steam");
         operationController.addOperation(operation2);
         Thread.sleep(properties.getTimeout());
 
@@ -53,11 +56,13 @@ public class OperationControllerTest extends OperationHistoryApiApplicationTest 
 
     @Test
     void removeOperationsTest() throws InterruptedException {
-        OperationDto operation1 = new OperationDto(1,1,100,"RUB","Steam");
+        OperationDto operation1 = new OperationDto(4,1,100,"RUB","Steam");
         operationController.addOperation(operation1);
         Thread.sleep(properties.getTimeout());
+        int oldSize = operationController.getOperations(1).size();
 
-        operationController.removeOperation(1, 1);
-        assertEquals(0, operationController.getOperations(1).size());
+
+        operationController.removeOperation(1, 4);
+        assertEquals(1, oldSize - operationController.getOperations(1).size());
     }
 }

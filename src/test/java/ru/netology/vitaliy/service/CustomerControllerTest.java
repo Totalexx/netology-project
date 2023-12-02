@@ -53,13 +53,18 @@ public class CustomerControllerTest extends OperationHistoryApiApplicationTest {
 
     @Test
     void removeCustomer() {
-        customerController.removeCustomer(1);
+        customerController.addCustomer(3,"Test");
+        customerController.removeCustomer(3);
         GetClientsResponse customers = customerController.getClients();
 
-        assertEquals(1, customers.getClients().size());
+        CustomerDto customer1 = customers.getClients().get(0);
+        CustomerDto customer2 = customers.getClients().get(1);
 
-        CustomerDto customer = customers.getClients().get(0);
-        assertEquals(2, customer.getId());
-        assertEquals("Boot", customer.getName());
+        assertEquals(1, customer1.getId());
+        assertEquals("Spring", customer1.getName());
+        assertEquals(2, customer2.getId());
+        assertEquals("Boot", customer2.getName());
+
+        assertEquals(2, customers.getClients().size());
     }
 }
